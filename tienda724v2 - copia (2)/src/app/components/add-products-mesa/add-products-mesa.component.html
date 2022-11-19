@@ -1,0 +1,703 @@
+<div class="web" *ngIf="false">
+    <!-- Dandole en agregar producto, se avanza a la página de selección -->
+    <div>
+        <!--Navbar-->
+        <div class="uk-flex uk-flex-between navbar-tables">
+            <div class="uk-flex uk-flex-middle" style="padding-left: 10px;">
+                <!-- <div uk-toggle="target: .menu-vertical-tables; cls: show" class="padding-horizontal-20">
+                      <img class="icon-menu-tables" src="./assets/data/menu.png" alt="">
+                  </div> -->
+                <i class="fas fa-home font-size-25 cursor-pointer color-red padding-horizontal-20" style="margin-left: 10px;" (click)="goMenu()"></i>
+                <div>
+                  <h3 style="padding:5%">{{getStoreName()}}</h3>
+                </div>
+                <!-- <div class="cursor-pointer uk-flex uk-flex-middle" style="margin-left: 60px;">
+                      <img class="logo-store-size-tables" src="./assets/data/logo2.png " alt=" ">
+                      <i class="fas fa-caret-down font-size-17"></i>
+                  </div> -->
+            </div>
+            <div class="uk-inline cursor-pointer padding-horizontal-30 uk-flex uk-flex-middle">
+                <button class="button-data-user-tables uk-flex uk-flex-middle">
+                  <img class="logo-user-size-tables" src="./assets/data/icono-de-usuario.png " alt=" ">
+                  <h4 class="uk-text-bold uk-margin-remove color-red" style="padding-right: 5px;">{{clientName}}</h4>
+                  <i class="fas fa-caret-down "></i>
+                </button>
+                <div uk-drop="mode: click">
+                    <div class="uk-card uk-card-body uk-card-default uk-box-shadow-large drop-data-user-tables">
+                        <div class="padding-vertical-10">
+                            <h5 class="uk-text-bold uk-margin-remove">Roles activados:</h5>
+                            <h5 class="uk-margin-remove ">{{getRolString()}}</h5>
+                        </div>
+                        <div class="hr-tab"></div>
+                        <div class="padding-vertical-10">
+                            <h5 class="uk-text-bold uk-margin-remove">Id de usuario:</h5>
+                            <h5 class="uk-margin-remove ">{{username}}</h5>
+                        </div>
+                        <div class="hr-tab"></div>
+                        <div class="padding-vertical-10">
+                            <button class="button-outside" (click)="logOut()">Cerrar Sesión</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="main-container-tables">
+            <!--Agregar producto-->
+            <div class="uk-flex uk-flex-middle uk-flex-between uk-flex-wrap search-specific-navbar-tables">
+                <div class="uk-flex uk-flex-middle">
+                    <div class="uk-flex uk-flex-middle cursor-pointer" style=" margin-left: 32px;" (click)="goToMesa()">
+                        <i class="fas fa-caret-left font-size-17 color-red-3" style="padding-right: 10px;"></i>
+                        <h4 class="uk-margin-remove uk-text-bold color-red-3 ">Mesas</h4>
+                    </div>
+                    <div class="uk-flex uk-flex-between uk-flex-middle">
+                        <input class="input-line-tables font-size-12" style="width: 230px; margin-left: 60px;" type="text" placeholder="Busqueda por nombre o código" [(ngModel)]="inputForCode" (ngModelChange)="listLoad()">
+                        <i class="fas fa-search font-size-17" style="padding-left: 15px;"></i>
+                        <button class="buttom-search-list-tables" uk-toggle="target: #search-specific-list">Busqueda por lista</button>
+                        <div id="search-specific-list" uk-modal>
+                            <div class="modal-list-products-tables uk-modal-dialog uk-modal-body">
+                                <button class="uk-modal-close-default" type="button" uk-close></button>
+                                <div class="uk-flex">
+                                    <div class="uk-width-1-2" style="border-right: 1px solid rgba(179, 179, 179, 0.747);">
+                                        <div class="box-shadow-tables">
+                                            <h4 class="uk-margin-remove uk-text-bold uk-text-center padding-vertical-15">Añadir pedido</h4>
+                                            <div class="uk-flex uk-flex-center">
+                                                <input type="text" class="modal-input-line-tables" placeholder="Busqueda por nombre o código" style="width: 300px; margin-left: 0px !important;" [(ngModel)]="inputForCode" (ngModelChange)="listLoad()">
+                                            </div>
+                                            <h5 class="uk-margin-remove uk-text-bold font-size-15 uk-text-center color-grey" style="padding-top: 30px; padding-bottom: 5px;">Lista de productos</h5>
+                                        </div>
+                                        <div class="modal-list-tables">
+                                            <ul class="uk-list">
+                                                <div *ngFor="let item of listaElem">
+                                                    <li *ngIf="item.inventario_DISPONIBLE == 'S' && (item.status !== 'ACTIVO')" class="modal-item-list-tables uk-margin-remove " style="color: gray;">
+                                                        {{item.product_STORE_NAME}} - {{item.ownbarcode}} - {{item.product_STORE_CODE}}
+                                                    </li>
+                                                    <li [hidden]="item.inventario_DISPONIBLE == 'S' && (item.status !== 'ACTIVO')" class="modal-item-list-tables uk-margin-remove " (click)="addDetail2(item.ownbarcode)">
+                                                        {{item.product_STORE_NAME}} - {{item.ownbarcode}} - {{item.product_STORE_CODE}}
+                                                    </li>
+                                                    <div class="hr-tab uk-margin-remove "></div>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-1-2">
+                                        <div class="box-shadow-tables">
+                                            <h4 class="uk-margin-remove uk-text-bold color-red uk-text-center padding-vertical-15">Pedido</h4>
+                                        </div>
+                                        <div>
+                                            <h5 class="uk-margin-remove uk-text-bold font-size-15 color-grey uk-text-center padding-vertical-10">Productos seleccionados</h5>
+                                        </div>
+                                        <div class="modal-list-right-tables">
+                                            <div class="uk-flex uk-flex-around uk-flex-middle" *ngFor="let item of productsObject">
+                                                <h6 class="uk-margin-remove uk-text-bold font-size-13 width-400">{{item.description}} - {{item.ownbarcode}} - {{item.code}}</h6>
+                                                <div style="margin-right: 10px;">
+                                                    <div class="uk-flex uk-flex-middle" style="margin-top: 20px;">
+                                                        <i class="fas fa-minus color-green font-size-20 cursor-pointer" (click)="downQuantity(item)"></i>
+                                                        <h6 class="uk-margin-remove padding-horizontal-20 uk-text-bold color-green font-size-20">{{item.quantity}}</h6>
+                                                        <i class="fas fa-plus color-green font-size-20 cursor-pointer" (click)="upQuantity(item)"></i>
+                                                    </div>
+                                                    <h6 class="uk-margin-remove uk-text-center font-size-12 cursor-pointer" (click)="individualDelete(item,0)">Quitar</h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-shadow-tables" style="height: 5px;"></div>
+                                        <div class="uk-flex uk-flex-center" style="margin-top: 25px;">
+                                            <button class="uk-text-bold modal-list-buttons-tables cursor-pointer" style="margin-right: 10px;">Aceptar</button>
+                                            <button class="uk-text-bold modal-list-buttons-tables cursor-pointer uk-modal-close">Volver</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="padding-horizontal-10" style="position: relative; margin-right: 23px;" href=" " uk-toggle="target: #place-order">
+                    <img class="img-size-bag-tables" src="./assets/data/Bolsa-de-compras.png" alt=" " uk-img>
+                    <h6 class="text-img-bag-navbar-tables uk-text-bold" style="position: absolute; ">{{getQuantity()}}</h6>
+                </a>
+            </div>
+            <!-- menu categorias vertical -->
+            <div class="menu-vertical-categories-tables" style="margin-top: 65px;">
+                <ul class="uk-list">
+                    <div class="uk-inline">
+                        <button class="button-categories-menu-vertical-tables cursor-pointer" (click)="setCategoryAll()">
+                            <div class="img-categories-menu-vertical-tables uk-align-center uk-margin-remove-bottom" uk-img></div>
+                            <h6 class="uk-margin-remove uk-text-bold" style="font-size: 11px;"> TODAS </h6>
+                        </button>
+                    </div>
+
+                    <div *ngFor="let item of categories">
+                        <button class="button-categories-menu-vertical-tables">
+                            <div class="img-categories-menu-vertical-tables uk-align-center uk-margin-remove-bottom" [ngStyle]="getImgURLCategory(item)" uk-img></div>
+                            <h6 class="uk-margin-remove uk-text-bold" style="font-size: 10px; padding-top: 5px;"> {{item.category}} </h6>
+                        </button>
+                        <div uk-drop="pos: right-center" class="categories-menu-vertical-tables" [ngStyle]="{'width.px': 95*item.hijos.length}">
+                            <div>
+                                <div class="box-categories-menu-vertical-tables uk-flex uk-flex-middle ">
+                                    <div class="uk-inline" style="height: 110px !important;">
+                                        <button class="button-items-menu-categories-tables uk-margin-remove " *ngFor="let item2 of item.hijos" (click)="setSubCategory(item2)">
+                                                    <div class="img-items-menu-scroll-tables uk-align-center uk-margin-remove-bottom " [ngStyle]="getImgURLCategory(item2)" uk-img></div>
+                                                    <h6 class="uk-margin-remove uk-text-bold" style="font-size: 10px; padding-top: 5px;"> {{item2.category}} </h6>
+                                            </button>
+                                    </div>
+                                </div>
+                                <i class="fas fa-level-down-alt uk-position-right font-size-19" style="margin-right: 17px; margin-top: 45px; padding-left: 10px;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </ul>
+            </div>
+            <div class="main-container-products-selection-tables">
+                <div class="uk-flex uk-flex-wrap uk-grid-small uk-grid-match" style="position: relative;" uk-grid>
+                    <div class="uk-card uk-card-default uk-card-body card-products-add-tables uk-flex" style="position: relative !important;;" *ngFor="let item of listaElem">
+                        <div class="uk-width-1-2" style="padding-top: 8px;">
+                            <div class="img-items-products-add-70-tables" [ngStyle]="getImgURL(item)" uk-img></div>
+                            <h6 class="uk-margin-remove font-size-11 uk-text-muted" style="padding-top: 5px; padding-left: 13px;">${{noDecimal(item.priceGen) | number}}</h6>
+                        </div>
+                        <!-- <h6 class="button-discount-card-tables" style="position: absolute;">-25%</h6> -->
+                        <div class="uk-width-1-2 uk-text-center">
+                            <h6 class="uk-margin-remove font-size-11 color-red-two uk-text-bold height-60">{{item.product_STORE_NAME}}</h6>
+                            <!-- <div class="height-50" style="margin-top: 10px;">
+                                  <h6 class="uk-margin-remove font-size-9">Lorem ipsum dolor sitamet, consectetuer adipiscing elit.</h6>
+                              </div> -->
+                            <Button class="button-card-add-product-tables font-size-10 uk-text-bold cursor-pointer" (click)="addDetail2(item.ownbarcode)">Agregar</Button>
+                            <!-- <div uk-toggle="target: .like-actives">
+                                  <img class="like-size-card-tables like-actives" src="./assets/data/Like-desactivado.png" style="position: absolute;" alt="">
+                                  <img class="like-size-card-tables like-actives" src="./assets/data/Like-activado.png" style="position: absolute;" alt="" hidden>
+                              </div> -->
+                        </div>
+                    </div>
+
+                    <div class="info-float-select-products-tables" uk-toggle="target: #place-order">
+
+                        <div class="uk-flex uk-flex-middle">
+                            <h5 class="uk-margin-remove uk-text-bold font-size-12 color-white">{{getQuantity()}}</h5>
+                            <div class="uk-text-center" style="margin-left:20px ;">
+                                <h6 class="uk-margin-remove font-size-12 color-white">${{getPriceTotal() |number}}</h6>
+                                <h6 class="uk-margin-remove font-size-12 cursor-pointer color-white">Concretar pedido</h6>
+                                <div id="place-order" uk-modal>
+                                    <div class="uk-modal-dialog uk-modal-body modal-add-products-order-tables">
+                                        <div class="uk-flex uk-flex-middle padding-horizontal-30" style="padding-top: 15px;">
+                                            <h4 class="uk-margin-remove color-red-3 uk-text-bold">Concretar pedido</h4>
+                                            <button class="uk-modal-close-default" type="button" style="margin-right: 10px; margin-top: 5px;" uk-close></button>
+                                        </div>
+                                        <div class="uk-flex uk-flex-wrap modal-order-tables">
+                                            <div class="uk-flex uk-flex-middle uk-flex-around modal-sizes-order-tables" *ngFor="let item of productsObject">
+                                                <div>
+                                                    <i class="fas fa-circle font-size-8 color-black" style="padding-right: 15px;"></i>
+                                                </div>
+                                                <div class="uk-width-1-3">
+                                                    <div class="img-items-products-add-90-tables" [ngStyle]="getImgURL(item)" uk-img></div>
+                                                </div>
+                                                <div class="uk-width-1-1" style="padding-left: 20px;">
+                                                    <div class="uk-flex">
+                                                        <div>
+                                                            <h5 class="uk-margin-remove uk-text-bold font-size-12 height-60" style="width: 120px;">{{item.description}}</h5>
+                                                            <h5 class="uk-margin-remove font-weight-500 font-size-13">${{noDecimal(item.priceGen) | number}}</h5>
+                                                        </div>
+                                                        <div>
+                                                            <div class="uk-flex uk-flex-middle" style="padding-left: 20px;">
+                                                                <i class="fas fa-minus color-green font-size-12 cursor-pointer" (click)="downQuantity(item)"></i>
+                                                                <h6 class="uk-margin-remove padding-horizontal-20 uk-text-bold color-green font-size-12">{{item.quantity}}</h6>
+                                                                <i class="fas fa-plus color-green font-size-12 cursor-pointer" (click)="upQuantity(item)"></i>
+                                                            </div>
+                                                            <h6 class="uk-margin-remove uk-text-center font-size-12 cursor-pointer" style="padding-left: 25px;" (click)="individualDelete(item,0)">Quitar</h6>
+                                                        </div>
+                                                    </div>
+                                                    <!-- <div class="uk-flex uk-flex-middle" style="padding-top: 20px;">
+                                                          <div>
+                                                              <div class="uk-flex uk-flex-middle">
+                                                                  <h6 class="uk-margin-remove font-size-11">Salsa</h6>
+                                                                  <i class="fas fa-caret-down cursor-pointer color-black" style="padding-left: 6px;"></i>
+                                                              </div>
+                                                              <div class="uk-flex uk-flex-middle" style="padding-top: 5px;">
+                                                                  <h6 class="uk-margin-remove font-size-11">Adicionales</h6>
+                                                                  <i class="fas fa-caret-down cursor-pointer color-black" style="padding-left: 6px;"></i>
+                                                              </div>
+                                                          </div>
+                                                          <div style="padding-left: 20px;">
+                                                              <div class="uk-flex uk-flex-middle">
+                                                                  <h6 class="uk-margin-remove font-size-11">Verduras</h6>
+                                                                  <i class="fas fa-caret-down cursor-pointer color-black" style="padding-left: 6px;"></i>
+                                                              </div>
+                                                              <div class="uk-flex uk-flex-middle" style="padding-top: 5px;">
+                                                                  <h6 class="uk-margin-remove font-size-11">Papas: </h6>
+                                                                  <h6 class="uk-margin-remove font-size-11">Si</h6>
+                                                                  <i class="fas fa-caret-down cursor-pointer color-black" style="padding-left: 7px;"></i>
+                                                              </div>
+                                                          </div>
+                                                      </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-total-order-shadow-tables">
+                                            <div class=" uk-flex uk-flex-middle uk-flex-center ">
+                                                <h3 class="uk-margin-remove uk-text-bold color-green " style="padding-right: 5px; ">Total:</h3>
+                                                <h4 class="uk-margin-remove font-weight-500 ">${{getPriceTotal() |number}}</h4>
+                                            </div>
+                                            <div class="uk-flex uk-flex-center " style="padding-bottom: 20px; padding-top: 10px; ">
+                                                <button class="button-modal-accept-order-tables color-white uk-modal-close" (click)="postNewDetails()">Aceptar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="menu-right-vertical-tables">
+                      <ul class="uk-list ">
+                          <div class="width-130 ">
+                              <h6 class="uk-margin-remove font-size-11 uk-text-bold " style="padding-bottom: 10px;">Productos relacionados con este artículo</h6>
+                          </div>
+                          <div class="uk-flex uk-flex-middle ">
+                              <div class="img-menu-right-vertical-tables uk-margin-remove-bottom " style="background-image: url(./assets/data/Categorias-1.jpg); " uk-img></div>
+                              <h6 class="uk-margin-remove font-size-10 " style="padding-left: 5px; ">Hamburguesa 2</h6>
+                          </div>
+                          <div class="uk-flex uk-flex-middle ">
+                              <div class="img-menu-right-vertical-tables uk-margin-remove-bottom " style="background-image: url(./assets/data/Categorias-2.jpg); " uk-img></div>
+                              <h6 class="uk-margin-remove font-size-10 " style="padding-left: 5px; ">Hamburguesa 3</h6>
+                          </div>
+                          <div class="uk-flex uk-flex-middle ">
+                              <div class="img-menu-right-vertical-tables uk-margin-remove-bottom " style="background-image: url(./assets/data/Categorias-3.jpg); " uk-img></div>
+                              <h6 class="uk-margin-remove font-size-10 " style="padding-left: 5px; ">Hamburguesa 4</h6>
+                          </div>
+                          <div class="uk-flex uk-flex-middle ">
+                              <div class="img-menu-right-vertical-tables uk-margin-remove-bottom " style="background-image: url(./assets/data/Categorias-4.jpg); " uk-img></div>
+                              <h6 class="uk-margin-remove font-size-10 " style="padding-left: 5px; ">Hamburguesa 5</h6>
+                          </div>
+                      </ul>
+                  </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div class="mobile">
+    <!-- Navbar -->
+    <div [hidden]="mainWindow">
+    <div class="uk-flex uk-flex-middle" style="padding-top: 5px;">
+        <i class="fas fa-angle-double-left padding-horizontal-5 uk-text-muted"></i>
+        <div class="uk-link-muted" (click)="goToMesa()">Regresar a mesa</div>
+    </div>
+    <ngx-spinner bdColor = "rgba(0,0,0,0.8)" size = "medium" color = "#fff" type = "square-jelly-box" [fullScreen] = "true"><p style="color: white" > Agregando... </p></ngx-spinner>
+    <div class="">
+        <h3 style="padding-left: 5%">{{getStoreName()}}</h3>
+    </div>
+    <!-- navbar tienda, caja -->
+    <!-- <div>
+        <div class="uk-flex uk-flex-middle uk-box-shadow-medium">
+            <h5 class="uk-margin-remove padding-vertical-10" style="padding-left: 20px; padding-top: 15px;">{{getStoreName()}}</h5>
+        </div>
+    </div> -->
+    <!--Agregar producto-->
+    <div>
+        <div>
+            <!--Navbar tipo de busqueda-->
+            <div class="uk-flex uk-flex-middle uk-box-shadow-medium uk-flex-between padding-horizontal-20" >
+                <i class="fas fa-search " style="color: black; font-size: 20px; padding-right: 10px ; "></i>
+                <div class="uk-search uk-search-medium">
+                    <input class="uk-search-input uk-text-light form-search-tables-responsive" type="text" placeholder="Buscador de productos " [(ngModel)]="inputForCode" (ngModelChange)="listLoad()">
+                </div>
+                <!-- <div>
+                    <button class=" uk-text-capitalize uk-text-bold uk-button uk-button-default button-search-tables-responsive" style="margin-left: 15px;">Recargar</button>
+                </div> -->
+            </div>
+            <!-- Switcher -->
+            <!-- <div class="uk-flex uk-flex-middle" uk-switcher>
+                <button class="button-select-search-option-tables-responsive uk-flex uk-flex-middle">
+                    <h4 class="uk-text-center uk-text-bold uk-margin-remove">Productos por categorias</h4>
+                </button> -->
+                <!-- <button class="button-select-search-option-tables-responsive uk-flex uk-flex-middle">
+                    <h4 class="uk-text-center uk-text-bold uk-margin-remove padding-horizontal-40">Productos por lista</h4>
+                </button> -->
+            <!-- </div> -->
+            <div class="uk-flex uk-flex-middle">
+                <!-- <div class="button-select-search-cat-tables-responsive uk-box-shadow-hover-large uk-flex uk-flex-middle uk-flex-center">
+                    <button onclick="openMenu('categories-tables-responsive')" class="uk-text-capitalize uk-text-bold uk-button uk-button-default button-search-cat-tables-responsive"> {{selectedCategoryName}} </button>
+                </div> -->
+                <div class="button-select-search-cat-tables-responsive uk-flex uk-flex-middle uk-flex-center">
+                  <div>
+                      <!-- <select (change)="setCategory()" [(ngModel)]="selectedCategory">
+                          <option value=-1>TODAS</option>
+                          <option [value]="item.id_category" *ngFor="let item of categories"> {{item.category}} </option>
+                      </select> -->
+                    <button class="uk-button uk-button-default" type="button" tabindex="-1" (click)="setTodos();">
+                      <span> Todos </span>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!(productsObject.length>0)" class="button-select-search-cat-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="width: 170px;" >
+                  <div class="background-green-buy-tables-responsive" style="background-color: gray;">
+                      <div class="uk-flex uk-flex-middle" style="padding-left: 0px">
+                          <h6 class="uk-margin-remove" style="padding-right:5px ;"> ${{getPriceTotal() |number}}</h6>
+                          <div class="uk-flex uk-flex-middle" style="width: 250px !important;">
+                              <div class="hr-vertical" style="margin-right: 0px;"></div>
+                              <a style="position: relative; ">
+                                  <img class="bag-buy-box-green-tables-responsive" src="./assets/data/Carrito-de-compras.png " alt=" " uk-img>
+                                  <h6 class="text-img-buy-tables-responsive" style="position: absolute; "> {{getQuantity()}} </h6>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+                <div *ngIf="productsObject.length>0 && desagregada" (click)="toggleDesagregada()" class="button-select-search-cat-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="width: 170px;" >
+                  <div class="background-green-buy-tables-responsive">
+                      <div class="uk-flex uk-flex-middle" style="font-size: 10px; padding-bottom: -10%;text-align:center">
+                        Desagregada
+                      </div>
+                        <div class="uk-flex uk-flex-middle" style="padding-left: 0px">
+                            <h6 class="uk-margin-remove" style="padding-right:5px ;"> ${{getPriceTotal() |number}}</h6>
+                            <div class="uk-flex uk-flex-middle" style="width: 250px !important;">
+                                <div class="hr-vertical" style="margin-right: 0px;"></div>
+                                <a style="position: relative; ">
+                                    <img class="bag-buy-box-green-tables-responsive" src="./assets/data/Carrito-de-compras.png " alt=" " uk-img>
+                                    <h6 class="text-img-buy-tables-responsive" style="position: absolute; "> {{getQuantity()}} </h6>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="productsObject.length>0 && desagregada" (click)="toggleAgregadas()" class="button-select-search-cat-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="width: 170px;"  >
+                  <div class="background-green-buy-tables-responsive">
+                    <div class="uk-flex uk-flex-middle" style="font-size: 10px; padding-bottom: -10%;text-align:center">
+                      Agregada
+                    </div>
+                      <div class="uk-flex uk-flex-middle" style="padding-left: 0px">
+                          <h6 class="uk-margin-remove" style="padding-right:5px ;"> ${{getPriceTotal() |number}}</h6>
+                          <div class="uk-flex uk-flex-middle" style="width: 250px !important;">
+                              <div class="hr-vertical" style="margin-right: 0px;"></div>
+                              <a style="position: relative; ">
+                                  <img class="bag-buy-box-green-tables-responsive" src="./assets/data/Carrito-de-compras.png " alt=" " uk-img>
+                                  <h6 class="text-img-buy-tables-responsive" style="position: absolute; "> {{getQuantity()}} </h6>
+                              </a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </div>
+                <!--Contenido Busqueda por categorias-->
+                <div style="padding-top: -15% !important;">
+                    <div class="uk-flex uk-flex-middle" style="width: calc(100% - 40px);
+                    margin-left: 20px;
+                    margin-right: 20px;
+                    overflow-x: scroll;
+                    padding-bottom: 10px;">
+                        <div class="uk-text-center" style="margin-right: 20px; " *ngFor="let item of subCategoryList" (click)="setSubCategory(item)">
+                            <div class="cursor-pointer" [ngStyle]="getImgURLCategory(item)" style="height: 70px;
+                            width: 70px;
+                            border-radius: 50%;
+                            background-position: 50%;
+                            background-size: 100% auto;" uk-img></div>
+                            <p style="margin-top: 5px !important; margin: 0 0 5px 0 !important;font-size: 10px; "> {{item.category}} </p>
+                        </div>
+                    </div>
+                    <div style="padding-right: 20px;padding-left: 20px;">
+                        <h3 class="uk-text-bold uk-margin-remove"> {{subCategoryName}} </h3>
+                        <div style="overflow: scroll !important; height: 300px !important;">
+                        <div class="uk-flex uk-flex-between uk-flex-middle" style="margin-top: 5px;" *ngFor="let item of listaElem" [hidden]="item.inventario_DISPONIBLE=='S' || (item.status !=='ACTIVO' ) ">
+                            <div style="position: relative;">
+                                <div style="min-width: 65px;
+                                max-width: 65px;
+                                width: 65px;
+                                height: 65px;
+                                border-radius: 50%;
+                                background-position: 50%;
+                                background-size: 100% auto;
+                                margin-top: 2px;
+                                margin-bottom: 2px;" [ngStyle]="getImgURL(item)" uk-toggle="target: #modal-detail-product" uk-img (click)="setItem(item)"></div>
+                                <!-- <a href="#" uk-toggle="target: .toggle">
+                                  <img class="like-size-tables-responsive toggle" style="position: absolute;" src="./assets/data/Like-activado.png " alt=" " hidden>
+                                  <img class="like-size-tables-responsive toggle" style="position: absolute;" src="./assets/data/Like-desactivado.png" alt=" ">
+                              </a> -->
+                                <div id="modal-detail-product" uk-modal>
+                                    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical modal-description-product">
+                                        <button class="uk-modal-close-default" type="button" uk-close></button>
+                                        <div class="modal-overflow">
+                                            <h4 class="uk-text-bold uk-margin-remove uk-text-center"> {{itemObject.product_STORE_NAME.split("-")[0]}} </h4>
+                                            <div class="uk-flex uk-flex-center">
+                                                <img class="img-modal-descr" src={{getImgURL2(itemObject)}} alt="">
+                                            </div>
+                                            <div class="scroll-modal">
+                                                <p class="uk-text-justify">{{itemObject.product_STORE_NAME.split("-")[1]}}</p>
+                                            </div>
+                                            <!-- <div class="img-items-products-add-tables-description-responsive" [ngStyle]="getImgURL(item)" uk-img></div> -->
+                                            <div class="uk-flex uk-flex-around uk-flex-middle uk-flex-center">
+                                                <div>
+                                                    <h4 class="uk-margin-remove uk-text-bold uk-text-center"> Precio: </h4>
+                                                    <h4 class="uk-margin-remove uk-text-center" style="text-decoration: line-through;"> ${{itemObject.priceGen | number}} </h4>
+                                                </div>
+                                                <div>
+                                                    <h6 class="uk-margin-remove uk-text-center discount ">-{{itemObject.discountCode}}%</h6>
+                                                    <h4 class="uk-margin-remove uk-text-center uk-text-bold " *ngIf="itemObject.discountCode==0">${{noDecimal(itemObject.priceGen) | number}}</h4>
+                                                    <h4 class="uk-margin-remove uk-text-center uk-text-bold " *ngIf="itemObject.discountCode!=0">${{noDecimal(itemObject.priceGen-(itemObject.priceGen*itemObject.discountCode/100)) | number}}</h4>
+                                                </div>
+                                            </div>
+                                            <div class="uk-flex uk-flex-center">
+                                                <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" (click)="addDetail2(itemObject.ownbarcode) " style="margin-bottom: 15px;">Agregar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="margin-left: 15px;" class="vieew2">
+                                <h6 class="uk-text-bold uk-margin-remove font-size-15 uk-text-truncate " style="width: 160px;"> {{item.product_STORE_NAME}} </h6>
+                                <div class="uk-flex uk-flex-middle" *ngIf="item.discountCode!=0">
+                                    <h5 class="uk-margin-remove uk-text-bold">Precio:</h5>
+                                    <h5 class="uk-margin-remove padding-horizontal-10" style="text-decoration: line-through;"> ${{noDecimal(item.priceGen) | number}} </h5>
+                                </div>
+                            </div>
+                            <div style="margin-left: 15px;" class="vieew">
+                              <h6 class="uk-text-bold uk-margin-remove font-size-15 " style="width: 560px;"> {{item.product_STORE_NAME}} </h6>
+                              <div class="uk-flex uk-flex-middle" *ngIf="item.discountCode!=0">
+                                  <h5 class="uk-margin-remove uk-text-bold">Precio:</h5>
+                                  <h5 class="uk-margin-remove padding-horizontal-10" style="text-decoration: line-through;"> ${{noDecimal(item.priceGen) | number}} </h5>
+                              </div>
+                            </div>
+                            <div *ngIf="item.discountCode!=0">
+                                <h6 class="uk-margin-remove uk-text-center discount ">- {{item.discountCode}} %</h6>
+                                <h4 class="uk-margin-remove uk-text-center uk-text-bold "> ${{noDecimal(item.priceGen-(item.priceGen * item.discountCode)/100) | number}} </h4>
+                                <button class="uk-text-capitalize button-add-tables-responsive " (click)="addDetail2(item.ownbarcode) ">Agregar</button>
+                            </div>
+                            <div *ngIf="item.discountCode==0">
+                              <h4 class="uk-margin-remove uk-text-center uk-text-bold "> ${{noDecimal(item.priceGen)  | number}} </h4>
+                              <button class="uk-text-capitalize button-add-tables-responsive " (click)="addDetail2(item.ownbarcode) ">Agregar</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+                <!--Contenido busqueda por lista-->
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-concretar-pedido-desagregada" [hidden]="!opcionesModal" class="uk-modal-full" style="background-color: white;">
+      <div style="padding: 30px; " >
+          <div class="uk-flex uk-flex-middle ">
+              <div class="icon-close uk-flex uk-flex-middle uk-flex-center uk-modal-close-full"  (click)="toggleDesagregada()">
+                  <i class="fas fa-times "></i>
+              </div>
+              <div class="padding-horizontal-20 ">
+                  <h1 class="uk-text-bold uk-margin-remove ">Tu Orden</h1>
+                  <h4 class="uk-text-bold uk-margin-remove ">TOTAL: ${{getPriceTotal() |number}}</h4>
+              </div>
+          </div>
+          <div style="overflow: scroll !important; height: 500px !important;">
+
+            <div uk-grid *ngFor="let item of productsObject2; let i=index" [attr.data-index]="i">
+                <div class="uk-width-1-2 " style="padding-top: 20px;">
+                    <div style="position: relative; " >
+                        <!-- <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item)" uk-toggle="target: #modal-detail-product" uk-img (click)="setItem(item)"></div> -->
+                        <a (click)="setItemOptions(i);toggleOptions()">
+
+                        <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item)" uk-img ></div>
+                        <!-- <h6 class="discount-basket-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="position: absolute; ">-25%</h6> -->
+                        </a>
+                      </div>
+
+                </div>
+                <div class="uk-width-1-2 uk-margin-remove padding-horizontal-5" style="padding-top: 30px; ">
+                    <h5 class="uk-margin-remove uk-text-bold "> {{item.description.split("-")[0]}} </h5><h6 class="font-size-13 uk-margin-remove" (click)="individualDelete(item, i)"><i class="fas fa-trash "></i></h6>
+                      <!-- <div class="uk-flex uk-flex-middle uk-align-center uk-margin-remove"> -->
+                          <!-- <div class="icon-plus-minus uk-flex uk-flex-middle uk-flex-center" style="margin-right: 20px; " (click)="upQuantity(item)">
+                              <i class="fas fa-plus "></i>
+                          </div> -->
+                          <!-- <h2 class="uk-text-bold uk-margin-remove "> {{item.quantity}} </h2> -->
+                          <!-- <div class="icon-plus-minus uk-flex uk-flex-middle uk-flex-center" style="margin-left: 20px; " (click)="downQuantity(item)">
+                              <i class="fas fa-minus "></i>
+                          </div> -->
+                      <!-- </div> -->
+                    <!-- <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento==0">Valor unitario: ${{item.pricelist[0].price | number}} </h6>
+                    <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento!=0">Valor unitario: ${{item.pricelist[0].price-(item.pricelist[0].price * item.pricelist[0].pct_descuento)/100 | number}} </h6> -->
+                    <h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento==0">Valor: ${{noDecimal(item.pricelist[0].price * item.quantity) | number}} </h5>
+                    <h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento!=0">Valor: ${{noDecimal((item.pricelist[0].price-(item.pricelist[0].price * item.pricelist[0].pct_descuento)/100) * item.quantity) | number}} </h5>
+                </div>
+            </div>
+          </div>
+        <div class="uk-flex uk-flex-center">
+            <button class="button-finish-order-tables-responsive uk-modal-close" style="margin:5px" uk-toggle="target: #confirmar">Vaciar Carrito</button>
+            <button *ngIf="productsObject2.length>0" class="button-finish-order-tables-responsive uk-modal-close" style="margin:5px" uk-toggle="target: #confirmar3">Completar Orden</button>
+            <button *ngIf="productsObject2.length<=0"class="button-finish-order-tables-responsive2" style="margin:5px">Completar Orden</button>
+        </div>
+      </div>
+  </div>
+
+  <div id="confirmar" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical" style="    width: 300px;
+    height: 200px;
+    border-radius: 10px;">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <div class="modal-overflow">
+        <h4 style="text-align: center;">Estás Seguro que deseas Vaciar el Carrito?</h4>
+        <div class="uk-flex uk-flex-center">
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" (click)="vaciarCarrito();toggleDesagregada()" style="margin: 15px !important;">Aceptar</button>
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" style="margin: 15px !important;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmar2" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical" style="    width: 300px;
+    height: 200px;
+    border-radius: 10px;">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <div class="modal-overflow">
+        <h4 style="text-align: center;">Estás Seguro que deseas Vaciar el Carrito?</h4>
+        <div class="uk-flex uk-flex-center">
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" (click)="vaciarCarrito();toggleAgregadas()" style="margin: 15px !important;">Aceptar</button>
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" style="margin: 15px !important;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmar3" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical" style="    width: 300px;
+    height: 200px;
+    border-radius: 10px;">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <div class="modal-overflow">
+        <h4 style="text-align: center;">Estás Seguro que deseas Completar la Orden?</h4>
+        <div class="uk-flex uk-flex-center">
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" (click)="postNewDetails();toggleDesagregada()" style="margin: 15px !important;">Aceptar</button>
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" style="margin: 15px !important;">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmar4" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical" style="    width: 300px;
+    height: 200px;
+    border-radius: 10px;">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+      <div class="modal-overflow">
+        <h4 style="text-align: center;">Estás Seguro que deseas Completar la Orden?</h4>
+        <div class="uk-flex uk-flex-center">
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" (click)="postNewDetails();toggleAgregadas()" style="margin: 15px !important;">Aceptar</button>
+          <button class="uk-text-capitalize button-add-tables-responsive-two uk-modal-close" style="margin: 15px !important;" >Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 30px; " [hidden]="!opcionesModal2">
+    <div class="uk-flex uk-flex-middle ">
+      <div class="padding-horizontal-20 ">
+        <h1 class="uk-text-bold uk-margin-remove ">Opciones</h1>
+        <h4 class="uk-text-bold uk-margin-remove "> {{getOptionsDescription()}} </h4>
+      </div>
+    </div>
+    <div *ngFor="let item of getOptions()" class="uk-flex uk-flex-center " style="padding-top: 20px; padding-bottom: 20px; ">
+      <label style="border: none !important; width: 120px;"><input class="uk-checkbox padding-bottom-10" type="checkbox" [(ngModel)]="item.check"> {{item.descripcion}} </label>
+    </div>
+    <div class="uk-flex uk-flex-center " style="padding-top: 20px; padding-bottom: 20px; ">
+      <textarea [(ngModel)]="text"></textarea>
+    </div>
+    <div class="uk-flex uk-flex-center " style="padding-top: 20px; padding-bottom: 20px; ">
+      <button class="button-finish-order-tables-responsive" (click)="saveOptions()">Guardar</button>
+    </div>
+  </div>
+
+  <div id="modal-concretar-pedido" class="uk-modal-full" style="background-color: white;" [hidden]="!agregadaModal" >
+    <div style="padding: 30px; ">
+        <div class="uk-flex uk-flex-middle ">
+            <div class="icon-close uk-flex uk-flex-middle uk-flex-center uk-modal-close-full" (click)="toggleAgregadas()">
+                <i class="fas fa-times "></i>
+            </div>
+            <div class="padding-horizontal-20 ">
+                <h1 class="uk-text-bold uk-margin-remove ">Tu Orden</h1>
+                <h4 class="uk-text-bold uk-margin-remove ">TOTAL: ${{getPriceTotal() |number}}</h4>
+            </div>
+        </div>
+        <div style="overflow: scroll !important; height: 500px !important;">
+            <div uk-grid *ngFor="let item of productsObject; let i=index" [attr.data-index]="i">
+                <div class="uk-width-1-2 " style="padding-top: 20px;">
+                    <div style="position: relative; ">
+                        <!-- <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item)" uk-toggle="target: #modal-detail-product" uk-img (click)="setItem(item)"></div> -->
+                        <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item)" uk-img ></div>
+                        <!-- <h6 class="discount-basket-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="position: absolute; ">-25%</h6> -->
+                    </div>
+                    <div style="padding-top: 20px; padding-left:10px;">
+                        <div class="uk-flex uk-flex-middle uk-align-center uk-margin-remove">
+                            <div class="icon-plus-minus uk-flex uk-flex-middle uk-flex-center" style="margin-right: 20px; " (click)="upQuantity(item)">
+                                <i class="fas fa-plus "></i>
+                            </div>
+                            <h2 class="uk-text-bold uk-margin-remove "> {{item.quantity}} </h2>
+                            <div class="icon-plus-minus uk-flex uk-flex-middle uk-flex-center" style="margin-left: 20px; "  (click)="setItemToDelete(item);toggleDelete()">
+                                <i class="fas fa-minus "></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="uk-width-1-2 uk-margin-remove padding-horizontal-5" style="padding-top: 30px; ">
+                    <h5 class="uk-margin-remove uk-text-bold "> {{item.description.split("-")[0]}} </h5>
+                    <!-- <h5 class="uk-margin-remove uk-text-bold "> {{item.ownbarcode}} - {{item.code}} </h5> -->
+                    <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento==0">Valor unitario: ${{noDecimal(item.pricelist[0].price) | number}} </h6>
+                    <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento!=0">Valor unitario: ${{noDecimal(item.pricelist[0].price-(item.pricelist[0].price * item.pricelist[0].pct_descuento)/100) | number}} </h6>
+                    <!-- <h6 class="uk-margin-remove ">Impuesto: {{this.getPercentTax(item.id_TAX)}}%</h6> -->
+                    <!-- <div style="padding-top: 20px; ">
+                      <select class="form-select-tables-responsive" style="width: 90% !important; ">
+                      <option class="select-items-tables-responsive" value=" ">Bodega 1</option>
+                      <option class="select-items-tables-responsive" value=" ">Opción 1</option>
+                  </select>
+                  </div> -->
+                    <h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento==0">Total: ${{noDecimal(item.pricelist[0].price * item.quantity) | number}} </h5>
+                    <h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="item.pricelist[0].pct_descuento!=0">Total: ${{noDecimal((item.pricelist[0].price-(item.pricelist[0].price * item.pricelist[0].pct_descuento)/100) * item.quantity) | number}} </h5>
+                </div>
+            </div>
+        </div>
+        <div class="uk-flex uk-flex-center ">
+          <button class="button-finish-order-tables-responsive uk-modal-close" style="margin:5px" uk-toggle="target: #confirmar2">Vaciar Carrito</button>
+          <button *ngIf="productsObject.length>0" class="button-finish-order-tables-responsive uk-modal-close" style="margin:5px" uk-toggle="target: #confirmar4">Completar Orden</button>
+          <button *ngIf="productsObject.length<=0" class="button-finish-order-tables-responsive2" style="margin:5px">Completar Orden</button>
+        </div>
+    </div>
+  </div>
+
+  <div style="padding: 30px; " *ngIf="deleteModal">
+    <div class="uk-flex uk-flex-middle ">
+        <div class="icon-close uk-flex uk-flex-middle uk-flex-center" (click)="cleanLisToDelete();toggleDelete()">
+            <i class="fas fa-arrow-left"></i>
+        </div>
+        <div class="padding-horizontal-20 ">
+            <h1 class="uk-text-bold uk-margin-remove "> {{itemToDelete.description.split('-')[0]}} </h1>
+        </div>
+    </div>
+    <div style="overflow: scroll !important; height: 475px !important;">
+      <div uk-grid *ngFor="let item of listaEliminar">
+          <div class="uk-width-1-2 " style="padding-top: 20px;">
+              <div style="position: relative; ">
+                  <!-- <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item)" uk-toggle="target: #modal-detail-product" uk-img (click)="setItem(item)"></div> -->
+                <div class="img-items-products-basket-tables-responsive" [ngStyle]="getImgURL(item.item)" uk-img ></div>
+                  <!-- <h6 class="discount-basket-tables-responsive uk-flex uk-flex-middle uk-flex-center" style="position: absolute; ">-25%</h6> -->
+              </div>
+              <!-- <div style="padding-top: 20px; padding-left:10px;"> -->
+                  <!-- <div class="uk-flex uk-flex-middle uk-align-center uk-margin-remove">
+                      <h2 class="uk-text-bold uk-margin-remove "> {{item.item.quantity}} </h2>
+                  </div> -->
+              <!-- </div> -->
+          </div>
+          <div class="uk-width-1-2 uk-margin-remove padding-horizontal-5" style="padding-top: 30px; ">
+              <h5 class="uk-margin-remove uk-text-bold "> {{item.item.description.split("-")[0]}}</h5> <h6 class="font-size-13 uk-margin-remove" (click)="individualDelete(item.item,item.index);cleanLisToDelete();toggleDelete()"><i class="fas fa-trash "></i></h6>
+              <!-- <h5 class="uk-margin-remove uk-text-bold "> {{item.ownbarcode}} - {{item.code}} </h5> -->
+              <!-- <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.item.pricelist[0].pct_descuento==0">Valor unitario: ${{item.item.pricelist[0].price | number}} </h6>
+              <h6 class="uk-margin-remove " style="padding-top: 20px; " *ngIf="item.item.pricelist[0].pct_descuento!=0">Valor unitario: ${{item.item.pricelist[0].price-(item.item.pricelist[0].price * item.pricelist[0].pct_descuento)/100 | number}} </h6> -->
+              <!-- <h6 class="uk-margin-remove ">Impuesto: {{this.getPercentTax(item.id_TAX)}}%</h6> -->
+              <!-- <div style="padding-top: 20px; ">
+                <select class="form-select-tables-responsive" style="width: 90% !important; ">
+                <option class="select-items-tables-responsive" value=" ">Bodega 1</option>
+                <option class="select-items-tables-responsive" value=" ">Opción 1</option>
+            </select>
+            </div> -->
+              <div *ngFor="let option of item.item.opciones">
+                <h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="option.check">
+                  {{option.descripcion}}
+                </h5>
+              </div>
+              <!--<h5 class="uk-margin-remove" style="padding-top: 20px; " *ngIf="item.item.pricelist[0].pct_descuento!=0">Total: ${{(item.item.pricelist[0].price-(item.item.pricelist[0].price * item.item.pricelist[0].pct_descuento)/100) * item.item.quantity | number}} </h5> -->
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

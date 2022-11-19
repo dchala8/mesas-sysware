@@ -1,0 +1,81 @@
+<div class="mobile">
+  <!-- Navbar -->
+  <div class="uk-flex uk-flex-middle" style="padding-top: 5px;">
+    <i class="fas fa-angle-double-left padding-horizontal-5 uk-text-muted"></i>
+    <div class="uk-link-muted" (click)="regresarAMesa()">Ver Mesas</div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-between uk-box-shadow-medium">
+    <h3 style="padding:5%"> Crear Cliente. </h3>
+    <div class="uk-flex uk-flex-middle">
+    </div>
+  </div>
+  <!--estado de compra-->
+  <div>
+    <div class="container-open-table-responsive">
+      <div>
+        <div style="margin: 25px;">
+          <label for="fname" *ngIf="type == 'E'">Nombre</label>
+          <input type="text" id="fname" name="firstname" *ngIf="type == 'E'" [(ngModel)]="primerNombre">
+
+          <label for="fname" *ngIf="type == 'P'">Primer Nombre</label>
+          <input type="text" id="fname" name="firstname" *ngIf="type == 'P'" [(ngModel)]="primerNombre">
+
+          <label for="fname" *ngIf="type == 'P'">Segundo Nombre</label>
+          <input type="text" id="fname" name="firstname" *ngIf="type == 'P'" [(ngModel)]="segundoNombre">
+
+          <label for="lname" *ngIf="type == 'P'">Primer Apellido</label>
+          <input type="text" id="lname" name="lastname" *ngIf="type == 'P'" [(ngModel)]="primerApellido">
+
+          <label for="lname" *ngIf="type == 'P'">Segundo Apellido</label>
+          <input type="text" id="lname" name="lastname" *ngIf="type == 'P'" [(ngModel)]="segundoApellido">
+
+          <!-- Default unchecked -->
+          <div class="custom-control custom-radio" style="margin-top: 10px;">
+            <input type="radio" class="custom-control-input" id="defaultUnchecked" name="defaultExampleRadios" value="P" [(ngModel)]="type" mdbInput>
+            <label class="custom-control-label" for="defaultUnchecked">Persona Natural</label>
+          </div>
+          <!-- Default checked -->
+          <div class="custom-control custom-radio">
+            <input type="radio" class="custom-control-input" id="defaultChecked" name="defaultExampleRadios" value="E" [(ngModel)]="type" mdbInput>
+            <label class="custom-control-label" for="defaultChecked">Persona Juridica</label>
+          </div>
+
+          <div style="margin-top: 15px;">
+            <label for="country" >Tipo Documento</label>
+            <select id="country" name="country" [(ngModel)]="docType">
+              <option [value]="item.id_document_type" *ngFor="let item of docList"> {{item.name}} </option>
+            </select>
+          </div>
+
+          <label for="lname">Numero de Documento</label>
+          <input type="text" id="lname" name="lastname" [(ngModel)]="numDoc">
+
+          <label for="lname">Direccion</label>
+          <input type="text" id="lname" name="lastname" [(ngModel)]="direccion">
+
+          <label for="lname">Telefono</label>
+          <input type="text" id="lname" name="lastname" [(ngModel)]="phone">
+
+          <label for="lname">Correo</label>
+          <input type="text" id="lname" name="lastname" [(ngModel)]="mail">
+
+          <div style="margin-top: 15px;">
+            <label for="country" >Genero</label>
+            <select id="country" name="country" [(ngModel)]="SelectedGen">
+              <option [value]="item.id_GENERO" *ngFor="let item of GenderList"> {{item.genero}} </option>
+            </select>
+          </div>
+
+          <div style="margin-top: 15px;">
+            <label for="country" >Ciudad</label>
+            <select id="country" name="country" [(ngModel)]="citySel">
+              <option [value]="item.id_CITY" *ngFor="let item of cityList"> {{item.city_NAME}} </option>
+            </select>
+          </div>
+
+          <input type="submit" value="Crear" (click)="crearCliente()">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

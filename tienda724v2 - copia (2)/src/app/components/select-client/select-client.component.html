@@ -1,0 +1,28 @@
+
+<div class="mobile">
+  <!-- Navbar -->
+  <div class="uk-flex uk-flex-middle" style="padding-top: 5px; margin-left: 15px;">
+    <i class="fas fa-angle-double-left padding-horizontal-5 uk-text-muted"></i>
+    <div class="uk-link-muted" style="margin-left: 5px;" (click)="regresarAMesa()">Ver Mesas</div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-between uk-box-shadow-medium">
+    <h3 style="padding:5%"> Buscar Cliente por Número de Documento. </h3>
+  </div>
+  <div class="uk-flex uk-flex-middle">
+    <input type="text" id="num Documento" name="firstname" style="margin-left: 25px;margin-right: 25px;margin-top: -10px;" [(ngModel)]="ccClient">
+  </div>
+  <div class="uk-flex uk-flex-middle">
+    <input type="submit" value="Buscar" style="margin-left: 25px;margin-right: 25px;" (click)="searchClient(ccClient)">
+  </div>
+  <hr>
+  <div style="text-align: center;">
+    <label>
+      Da click sobre el cliente a Seleccionar
+    </label>
+  </div>
+  <div >
+    <div class="uk-flex uk-flex-middle" *ngFor="let item of clientList">
+      <h5 style="margin: 25px; color: #0000EE; " (click)="setClient(item)"> {{item.fullname}} - {{item.document_TYPE}} {{item.document_NUMBER}}</h5>
+    </div>
+  </div>
+</div>
